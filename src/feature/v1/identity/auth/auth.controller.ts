@@ -6,7 +6,7 @@ export const signUpController = async (
     res: Response
 ): Promise<void> => {
     try {
-        const user = await authService.signUp(req.body);
+        const user = await authService.signUpService(req.body);
 
         res.status(201).json({
             message: "User created successfully",
@@ -26,3 +26,13 @@ export const signUpController = async (
         });
     }
 };
+
+export const logInController = async (
+    req: Request,
+    res: Response
+): Promise<void> => {};
+
+export const logOutController = async (
+    req: Request,
+    res: Response
+): Promise<void> => {};

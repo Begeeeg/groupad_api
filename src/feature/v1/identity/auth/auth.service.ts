@@ -3,16 +3,16 @@ import AuthModel from "./auth.model";
 import { SignUpData } from "./types/auth.types";
 import bcrypt from "bcryptjs";
 
-export const signUp = async ({ username, email, password }: SignUpData) => {
-    const existingUser = await UserModel.findOne({
-        $or: [{ username }, { email }],
+export const signUpService = async ({
+    username,
+    email,
+    password,
+}: SignUpData) => {
+    const existingEmail = await UserModel.findOne({
+        email,
     });
 
-    if (existingUser?.username === username) {
-        throw new Error("Username already exists");
-    }
-
-    if (existingUser?.email === email) {
+    if (existingEmail) {
         throw new Error("Email already exists");
     }
 
@@ -34,3 +34,7 @@ export const signUp = async ({ username, email, password }: SignUpData) => {
         email: user.email,
     };
 };
+
+export const logInService = async () => {};
+
+export const logOutService = async () => {};
