@@ -1,6 +1,6 @@
 import UserModel from "../user/user.model";
 import AuthModel from "./auth.model";
-import { SignUpData } from "./types/auth.types";
+import { LogInData, SignUpData } from "./types/auth.types";
 import bcrypt from "bcryptjs";
 
 export const signUpService = async ({
@@ -35,6 +35,30 @@ export const signUpService = async ({
     };
 };
 
-export const logInService = async () => {};
+export const logInService = async ({ email, password }: LogInData) => {
+    const user = await UserModel.findOne({
+        email,
+    });
+
+    if (!user) {
+        throw new Error("Invalid email or password");
+    }
+
+    const auth = await AuthModel.findOne({
+        userId: user._id,
+    }).select("+password");
+
+    if (!auth) {
+        throw new Error("Invalid email or password");
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, auth.password);
+
+    if (!isPasswordValid) {
+        throw new Error("Invalid email or password");
+    }
+
+    return user;
+};
 
 export const logOutService = async () => {};
