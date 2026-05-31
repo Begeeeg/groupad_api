@@ -8,6 +8,14 @@ export const signUpService = async ({
     email,
     password,
 }: SignUpData) => {
+    const existingUsername = await UserModel.findOne({
+        username,
+    });
+
+    if (existingUsername) {
+        throw new Error("Username already exists");
+    }
+
     const existingEmail = await UserModel.findOne({
         email,
     });
