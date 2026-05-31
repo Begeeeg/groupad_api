@@ -9,8 +9,6 @@ export interface IAuth {
 
     lastLogin?: Date | null;
 
-    refreshToken?: string | null;
-
     createdAt: Date;
     updatedAt: Date;
 }

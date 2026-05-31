@@ -18,11 +18,6 @@ const AuthSchema = new Schema<IAuth>(
             type: Date,
             default: null,
         },
-        refreshToken: {
-            type: String,
-            default: null,
-            select: false,
-        },
     },
     {
         timestamps: true,
