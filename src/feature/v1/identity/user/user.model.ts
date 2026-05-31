@@ -18,22 +18,13 @@ const UserSchema = new Schema<IUser>(
             lowercase: true,
             trim: true,
         },
-        password: {
+        avatarUrl: {
             type: String,
-            required: true,
-            select: false,
-        },
-        lastLogin: {
-            type: Date,
             default: null,
         },
         isActive: {
             type: Boolean,
             default: true,
-        },
-        avatarUrl: {
-            type: String,
-            default: null,
         },
         role: {
             type: String,
