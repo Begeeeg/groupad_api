@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as authService from "./auth.service";
+import { generateTokenandSetCookie } from "../../../../common/genTokenAndCookies";
 
 export const signUpController = async (
     req: Request,
@@ -7,6 +8,8 @@ export const signUpController = async (
 ): Promise<void> => {
     try {
         const user = await authService.signUpService(req.body);
+
+        generateTokenandSetCookie(res, user.id.toString());
 
         res.status(201).json({
             message: "User created successfully",
@@ -17,7 +20,6 @@ export const signUpController = async (
             res.status(400).json({
                 message: error.message,
             });
-
             return;
         }
 
@@ -34,6 +36,8 @@ export const logInController = async (
     try {
         const user = await authService.logInService(req.body);
 
+        generateTokenandSetCookie(res, user.id.toString());
+
         res.status(200).json({
             message: "User logged in successfully",
             data: user,
@@ -43,7 +47,6 @@ export const logInController = async (
             res.status(400).json({
                 message: error.message,
             });
-
             return;
         }
 
@@ -56,4 +59,21 @@ export const logInController = async (
 export const logOutController = async (
     req: Request,
     res: Response
-): Promise<void> => {};
+): Promise<void> => {
+    try {
+        res.cookie("jwt", "", {
+            maxAge: 0,
+            httpOnly: true,
+            sameSite: "strict",
+            secure: process.env.NODE_ENV === "production",
+        });
+
+        res.status(200).json({
+            message: "User logged out successfully",
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Internal server error",
+        });
+    }
+};

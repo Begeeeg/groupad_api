@@ -58,7 +58,9 @@ export const logInService = async ({ email, password }: LogInData) => {
         throw new Error("Invalid email or password");
     }
 
-    return user;
+    return {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+    };
 };
-
-export const logOutService = async () => {};
