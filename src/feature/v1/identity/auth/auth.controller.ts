@@ -1,8 +1,28 @@
-export const signUpController = async (req, res): Promise<void> => {
+import { Request, Response } from "express";
+import * as authService from "./auth.service";
+
+export const signUpController = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
     try {
-        const { username, email, password } = req.body;
+        const user = await authService.signUp(req.body);
+
+        res.status(201).json({
+            message: "User created successfully",
+            data: user,
+        });
     } catch (error) {
-        console.error("Error in signUpController:", error);
-        res.status(500).json({ message: "Internal server error" });
+        if (error instanceof Error) {
+            res.status(400).json({
+                message: error.message,
+            });
+
+            return;
+        }
+
+        res.status(500).json({
+            message: "Internal server error",
+        });
     }
 };
