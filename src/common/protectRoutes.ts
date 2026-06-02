@@ -2,12 +2,8 @@ import type { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import UserModel from "../feature/v1/identity/user/user.model";
 
-declare global {
-    namespace Express {
-        interface Request {
-            user?: any;
-        }
-    }
+interface TokenPayload extends JwtPayload {
+    userId: string;
 }
 
 export const protectRoutes = async (
@@ -15,10 +11,6 @@ export const protectRoutes = async (
     res: Response,
     next: NextFunction
 ) => {
-    interface TokenPayload extends JwtPayload {
-        userId: string;
-    }
-
     try {
         const token = req.cookies?.jwt;
         if (!token) {
@@ -29,11 +21,8 @@ export const protectRoutes = async (
             token,
             process.env.JWT_SECRET as string
         ) as TokenPayload;
-        if (!decoded) {
-            return res.status(401).json({ message: "Token invalid" });
-        }
 
-        const user = await UserModel.findById(decoded.userId);
+        const user = await UserModel.findById(decoded.userId).select("-password");
         if (!user) {
             return res.status(401).json({ message: "User not found" });
         }
