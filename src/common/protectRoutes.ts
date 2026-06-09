@@ -22,7 +22,9 @@ export const protectRoutes = async (
             process.env.JWT_SECRET as string
         ) as TokenPayload;
 
-        const user = await UserModel.findById(decoded.userId).select("-password");
+        const user = await UserModel.findById(decoded.userId).select(
+            "-password"
+        );
         if (!user) {
             return res.status(401).json({ message: "User not found" });
         }
@@ -31,6 +33,8 @@ export const protectRoutes = async (
         next();
     } catch (error) {
         console.error("Error in protectRoutes:", error);
-        res.status(401).json({ error: "Invalid or expired token" });
+        return res.status(401).json({
+            error: "Invalid or expired token",
+        });
     }
 };
