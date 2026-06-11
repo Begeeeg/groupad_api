@@ -6,7 +6,7 @@ export interface ITask {
     listId: Types.ObjectId;
     title: string;
     description?: string;
-    assignedTo?: Types.ObjectId;
+    assignedTo?: Types.ObjectId[];
     status: taskStatus;
     createdAt: Date;
     updatedAt: Date;
