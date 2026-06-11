@@ -1,4 +1,3 @@
-import { Types } from "mongoose";
 import UserModel from "../../identity/user/user.model";
 import ListModel from "./list.model";
 import { CreateListData } from "./types/list.types";
@@ -25,47 +24,51 @@ export const createListService = async ({
         throw new Error("Group lists require at least one member");
     }
 
-    let memberIds: Types.ObjectId[] = [];
+    let memberIds: (typeof user._id)[] = [];
 
     if (members?.length) {
+        const normalizedMembers = members.map((username) => username.trim());
+
+        const uniqueMembers = [...new Set(normalizedMembers)];
+
+        if (uniqueMembers.length !== normalizedMembers.length) {
+            throw new Error("Duplicate members are not allowed");
+        }
+
+        if (uniqueMembers.includes(user.username)) {
+            throw new Error("You cannot add yourself as a member");
+        }
+
         const memberUsers = await UserModel.find({
             username: {
-                $in: members,
+                $in: uniqueMembers,
             },
-        });
+        }).select("_id username");
 
-        if (memberUsers.length !== members.length) {
-            const foundUsernames = memberUsers.map((user) => user.username);
+        if (memberUsers.length !== uniqueMembers.length) {
+            const foundUsernames = memberUsers.map((member) => member.username);
 
-            const missingUsers = members.filter(
+            const missingUsernames = uniqueMembers.filter(
                 (username) => !foundUsernames.includes(username)
             );
 
-            throw new Error(`Users not found: ${missingUsers.join(", ")}`);
+            throw new Error(
+                `User(s) not found: ${missingUsernames.join(", ")}`
+            );
         }
 
-        memberIds = memberUsers.map((user) => user._id);
+        memberIds = memberUsers.map((member) => member._id);
     }
 
     const list = await ListModel.create({
         userId: user._id,
-        title,
+        title: title.trim(),
         type,
         members: memberIds,
         dueDate,
     });
 
-    const populatedList = await ListModel.findById(list._id).populate(
-        "members",
-        "username"
-    );
-
-    return {
-        ...populatedList!.toObject(),
-        members: (populatedList!.members as any[]).map(
-            (member) => member.username
-        ),
-    };
+    return list;
 };
 
 export const getListService = async () => {};
