@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { authRouter } from "./feature/v1/identity/auth";
 import { userRouter } from "./feature/v1/identity/user";
+import { listRouter } from "./feature/v1/pad/list";
 
 const app = express();
 
@@ -11,5 +12,6 @@ app.use(cookieParser());
 
 app.use("/api/v1/identity/auth", authRouter);
 app.use("/api/v1/identity/user", userRouter);
+app.use("/api/v1/pad/list", listRouter);
 
 export default app;

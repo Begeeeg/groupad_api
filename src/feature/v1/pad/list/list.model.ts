@@ -8,11 +8,11 @@ const ListSchema = new Schema<IList>(
             type: Schema.Types.ObjectId,
             ref: "User",
             required: true,
-            unique: true,
         },
         title: {
             type: String,
             required: true,
+            trim: true,
         },
         type: {
             type: String,
@@ -27,7 +27,6 @@ const ListSchema = new Schema<IList>(
         ],
         dueDate: {
             type: Date,
-            default: null,
             required: true,
         },
     },
