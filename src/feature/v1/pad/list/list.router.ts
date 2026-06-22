@@ -6,7 +6,9 @@ import {
     createListController,
     getListByIdController,
     getListController,
+    updateListController,
 } from "./list.controller";
+import { UpdateListSchema } from "./dto/update.data.dto";
 
 const router = express.Router();
 
@@ -18,5 +20,11 @@ router.post(
 );
 router.get("/get/", protectRoutes, getListController);
 router.get("/get/:id", protectRoutes, getListByIdController);
+router.patch(
+    "/update/:id",
+    protectRoutes,
+    validate(UpdateListSchema),
+    updateListController
+);
 
 export default router;

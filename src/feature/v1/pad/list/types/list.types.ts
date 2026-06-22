@@ -8,3 +8,12 @@ export interface CreateListData {
     members?: string[];
     dueDate: Date;
 }
+
+export interface UpdateListData {
+    userId: string;
+    listId: string;
+    title?: string;
+    type?: listType;
+    members?: string[];
+    dueDate?: Date;
+}
