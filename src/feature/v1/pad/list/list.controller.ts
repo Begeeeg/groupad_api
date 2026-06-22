@@ -12,7 +12,7 @@ export const createListController = async (
         }
 
         const list = await listService.createListService({
-            id: req.user._id.toString(),
+            userId: req.user._id.toString(),
             title: req.body.title,
             type: req.body.type,
             members: req.body.members,
@@ -84,10 +84,10 @@ export const getListByIdController = async (
             return;
         }
 
-        const list = await listService.getListByIdService(
-            req.user._id.toString(),
-            listId
-        );
+        const list = await listService.getListByIdService({
+            userId: req.user._id.toString(),
+            listId,
+        });
 
         res.status(200).json({
             message: "Fetched list successfully",
@@ -172,10 +172,10 @@ export const deleteListController = async (
             return;
         }
 
-        const list = await listService.deleteListService(
-            req.user._id.toString(),
-            listId
-        );
+        const list = await listService.deleteListService({
+            userId: req.user._id.toString(),
+            listId,
+        });
 
         res.status(200).json({
             message: "Deleted list successfully",
