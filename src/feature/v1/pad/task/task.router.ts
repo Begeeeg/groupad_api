@@ -2,6 +2,7 @@ import express from "express";
 import { protectRoutes } from "../../../../common/protectRoutes";
 import {
     createTaskController,
+    deleteTaskController,
     getTaskByIdController,
     getTaskController,
     updateTaskController,
@@ -26,5 +27,6 @@ router.patch(
     validate(updateTaskSchema),
     updateTaskController
 );
+router.delete("/:id/:id", protectRoutes, deleteTaskController);
 
 export default router;

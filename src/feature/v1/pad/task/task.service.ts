@@ -229,4 +229,25 @@ export const updateTaskService = async ({
     return task;
 };
 
-export const deleteTaskService = async () => {};
+export const deleteTaskService = async ({
+    userId,
+    taskId,
+}: GetTaskByIdData) => {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    const task = await TaskModel.findById(taskId);
+
+    if (!task) {
+        throw new Error("Task not found");
+    }
+
+    await getListByIdService({ userId, listId: task.listId.toString() });
+
+    await TaskModel.deleteOne({ _id: task._id });
+
+    return task;
+};
