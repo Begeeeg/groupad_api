@@ -138,7 +138,52 @@ export const getTaskByIdController = async (
 export const updateTaskController = async (
     req: Request,
     res: Response
-): Promise<void> => {};
+): Promise<void> => {
+    try {
+        if (!req.user) {
+            res.status(401).json({ message: "Unauthorized" });
+            return;
+        }
+
+        const taskId = req.params.id;
+
+        if (typeof taskId !== "string") {
+            res.status(400).json({ message: "Invalid list id" });
+            return;
+        }
+
+        const task = await taskService.updateTaskService({
+            userId: req.user._id.toString(),
+            taskId,
+            title: req.body.title,
+            description: req.body.description,
+            assignedTo: req.body.assignedTo,
+            status: req.body.status,
+        });
+
+        res.status(200).json({
+            message: "Updated task successfully",
+            data: task,
+        });
+    } catch (error) {
+        if (error instanceof Error) {
+            const status =
+                error.message === "Task not found" ||
+                error.message === "List not found"
+                    ? 404
+                    : 400;
+
+            res.status(status).json({
+                message: error.message,
+            });
+            return;
+        }
+
+        res.status(500).json({
+            message: "Internal server error",
+        });
+    }
+};
 
 export const deleteTaskController = async (
     req: Request,
