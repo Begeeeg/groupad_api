@@ -85,7 +85,30 @@ export const getListService = async (userId: string) => {
     return lists;
 };
 
-export const getListByIdService = async () => {};
+export const getListByIdService = async (userId: string, listId: string) => {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    const list = await ListModel.findById(listId);
+
+    if (!list) {
+        throw new Error("List not found");
+    }
+
+    const isOwner = list.userId.equals(user._id);
+    const isMember = (list.members ?? []).some((memberId) =>
+        memberId.equals(user._id)
+    );
+
+    if (!isOwner && !isMember) {
+        throw new Error("You do not have access to this list");
+    }
+
+    return list;
+};
 
 export const updateListService = async () => {};
 
