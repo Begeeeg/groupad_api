@@ -79,8 +79,6 @@ export const createListService = async ({
 export const getListService = async ({ userId }: GetListData) => {
     const user = await UserModel.findById(userId);
 
-    console.log("userId received:", userId);
-
     if (!user) {
         throw new Error("User not found");
     }
