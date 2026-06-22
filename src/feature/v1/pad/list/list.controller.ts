@@ -154,3 +154,45 @@ export const updateListController = async (
         });
     }
 };
+
+export const deleteListController = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
+    try {
+        if (!req.user) {
+            res.status(401).json({ message: "Unauthorized" });
+            return;
+        }
+
+        const listId = req.params.id;
+
+        if (typeof listId !== "string") {
+            res.status(400).json({ message: "Invalid list id" });
+            return;
+        }
+
+        const list = await listService.deleteListService(
+            req.user._id.toString(),
+            listId
+        );
+
+        res.status(200).json({
+            message: "Deleted list successfully",
+            data: list,
+        });
+    } catch (error) {
+        if (error instanceof Error) {
+            const status = error.message === "List not found" ? 404 : 400;
+
+            res.status(status).json({
+                message: error.message,
+            });
+            return;
+        }
+
+        res.status(500).json({
+            message: "Internal server error",
+        });
+    }
+};

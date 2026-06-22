@@ -218,4 +218,24 @@ export const updateListService = async ({
     return list;
 };
 
-export const deleteListService = async () => {};
+export const deleteListService = async (userId: string, listId: string) => {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    const list = await ListModel.findById(listId);
+
+    if (!list) {
+        throw new Error("List not found");
+    }
+
+    if (!list.userId.equals(user._id)) {
+        throw new Error("Only the list owner can delete this list");
+    }
+
+    await ListModel.deleteOne({ _id: list._id });
+
+    return list;
+};

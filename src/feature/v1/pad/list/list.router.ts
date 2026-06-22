@@ -4,6 +4,7 @@ import { validate } from "../../../../common/validate.data.dto";
 import { CreateListSchema } from "./dto/create.data.dto";
 import {
     createListController,
+    deleteListController,
     getListByIdController,
     getListController,
     updateListController,
@@ -26,5 +27,6 @@ router.patch(
     validate(UpdateListSchema),
     updateListController
 );
+router.delete("/delete/:id", protectRoutes, deleteListController);
 
 export default router;
