@@ -3,7 +3,7 @@ import UserModel from "../../identity/user/user.model";
 import ListModel from "../list/list.model";
 import { getListByIdService } from "../list/list.service";
 import TaskModel from "./task.model";
-import { CreateTaskData } from "./types/task.types";
+import { CreateTaskData, GetTaskData } from "./types/task.types";
 
 export const createTaskService = async ({
     userId,
@@ -86,7 +86,21 @@ export const createTaskService = async ({
     return task;
 };
 
-export const getTaskService = async () => {};
+export const getTaskService = async ({ userId, listId }: GetTaskData) => {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    const list = await getListByIdService({ userId, listId });
+
+    const tasks = await TaskModel.find({ listId: list._id }).sort({
+        createdAt: -1,
+    });
+
+    return tasks;
+};
 
 export const getTaskByIdService = async () => {};
 

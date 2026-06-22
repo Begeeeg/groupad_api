@@ -17,3 +17,8 @@ export interface UpdateTaskData {
     status?: taskStatus;
     assignedTo?: string[];
 }
+
+export interface GetTaskData {
+    userId: string;
+    listId: string;
+}
