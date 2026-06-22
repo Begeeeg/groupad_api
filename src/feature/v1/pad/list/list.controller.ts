@@ -47,7 +47,9 @@ export const getListController = async (
             return;
         }
 
-        const lists = await listService.getListService(req.user._id.toString());
+        const lists = await listService.getListService({
+            userId: req.user._id.toString(),
+        });
 
         res.status(200).json({
             message: "Fetched lists successfully",

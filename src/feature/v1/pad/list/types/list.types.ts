@@ -21,3 +21,7 @@ export interface ListData {
     userId: string;
     listId: string;
 }
+
+export interface GetListData {
+    userId: string;
+}
