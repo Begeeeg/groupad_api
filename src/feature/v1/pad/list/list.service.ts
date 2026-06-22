@@ -71,7 +71,19 @@ export const createListService = async ({
     return list;
 };
 
-export const getListService = async () => {};
+export const getListService = async (userId: string) => {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    const lists = await ListModel.find({
+        $or: [{ userId: user._id }, { members: user._id }],
+    }).sort({ createdAt: -1 });
+
+    return lists;
+};
 
 export const getListByIdService = async () => {};
 
