@@ -3,7 +3,11 @@ import UserModel from "../../identity/user/user.model";
 import ListModel from "../list/list.model";
 import { getListByIdService } from "../list/list.service";
 import TaskModel from "./task.model";
-import { CreateTaskData, GetTaskData } from "./types/task.types";
+import {
+    CreateTaskData,
+    GetTaskByIdData,
+    GetTaskData,
+} from "./types/task.types";
 
 export const createTaskService = async ({
     userId,
@@ -102,7 +106,26 @@ export const getTaskService = async ({ userId, listId }: GetTaskData) => {
     return tasks;
 };
 
-export const getTaskByIdService = async () => {};
+export const getTaskByIdService = async ({
+    userId,
+    taskId,
+}: GetTaskByIdData) => {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    const task = await TaskModel.findById(taskId);
+
+    if (!task) {
+        throw new Error("Task not found");
+    }
+
+    await getListByIdService({ userId, listId: task.listId.toString() });
+
+    return task;
+};
 
 export const updateTaskService = async () => {};
 

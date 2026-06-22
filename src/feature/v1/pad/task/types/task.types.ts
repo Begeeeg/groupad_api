@@ -22,3 +22,8 @@ export interface GetTaskData {
     userId: string;
     listId: string;
 }
+
+export interface GetTaskByIdData {
+    userId: string;
+    taskId: string;
+}
