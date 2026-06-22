@@ -1,16 +1,16 @@
 import UserModel from "../../identity/user/user.model";
 import ListModel from "./list.model";
-import { CreateListData, UpdateListData } from "./types/list.types";
+import { CreateListData, ListData, UpdateListData } from "./types/list.types";
 import { listType } from "./types/list.enums";
 
 export const createListService = async ({
-    id,
+    userId,
     title,
     type,
     members,
     dueDate,
 }: CreateListData) => {
-    const user = await UserModel.findById(id);
+    const user = await UserModel.findById(userId);
 
     if (!user) {
         throw new Error("User not found");
@@ -71,7 +71,7 @@ export const createListService = async ({
     return list;
 };
 
-export const getListService = async (userId: string) => {
+export const getListService = async ({ userId }: ListData) => {
     const user = await UserModel.findById(userId);
 
     if (!user) {
@@ -85,7 +85,7 @@ export const getListService = async (userId: string) => {
     return lists;
 };
 
-export const getListByIdService = async (userId: string, listId: string) => {
+export const getListByIdService = async ({ userId, listId }: ListData) => {
     const user = await UserModel.findById(userId);
 
     if (!user) {
@@ -218,7 +218,7 @@ export const updateListService = async ({
     return list;
 };
 
-export const deleteListService = async (userId: string, listId: string) => {
+export const deleteListService = async ({ userId, listId }: ListData) => {
     const user = await UserModel.findById(userId);
 
     if (!user) {

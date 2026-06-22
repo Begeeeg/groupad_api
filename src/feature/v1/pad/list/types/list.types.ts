@@ -1,8 +1,7 @@
-import { Types } from "mongoose";
 import { listType } from "./list.enums";
 
 export interface CreateListData {
-    id: string;
+    userId: string;
     title: string;
     type: listType;
     members?: string[];
@@ -16,4 +15,9 @@ export interface UpdateListData {
     type?: listType;
     members?: string[];
     dueDate?: Date;
+}
+
+export interface ListData {
+    userId: string;
+    listId: string;
 }
