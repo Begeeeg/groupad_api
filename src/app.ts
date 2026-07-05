@@ -1,22 +1,27 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { authRouter } from "./feature/v1/identity/auth";
-import { userRouter } from "./feature/v1/identity/user";
-import { listRouter } from "./feature/v1/pad/list";
-import { taskRouter } from "./feature/v1/pad/task";
+import apiRouter from "./router";
+import { errorRoute, notFoundRoute } from "./common/errorRoute";
 
 const app = express();
 
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(
+    cors({
+        origin: process.env.CLIENT_URL || "http://localhost:3000",
+        credentials: true,
+    })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use("/api/v1/identity/auth", authRouter);
-app.use("/api/v1/identity/user", userRouter);
-app.use("/api/v1/pad/list", listRouter);
-app.use("/api/v1/pad/task", taskRouter);
+app.get("/health", (_req, res) => res.status(200).json({ status: "ok" }));
+
+app.use("/api/v1", apiRouter);
+
+app.use(notFoundRoute);
+app.use(errorRoute);
 
 export default app;
