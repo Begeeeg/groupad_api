@@ -7,10 +7,15 @@ export const validate =
         const result = schema.safeParse(req.body);
 
         if (!result.success) {
-            return res.status(400).json(result.error.flatten());
+            const { fieldErrors } = result.error.flatten();
+            const firstError = Object.values(fieldErrors).flat()[0];
+
+            return res.status(400).json({
+                message: firstError || "Validation failed",
+                errors: fieldErrors,
+            });
         }
 
         req.body = result.data;
-
         next();
     };
