@@ -1,6 +1,10 @@
 import express from "express";
 import { protectRoutes } from "../../../../common/protectRoutes";
-import { getUserController, updateUserController } from "./user.controller";
+import {
+    getUserController,
+    searchUsersController,
+    updateUserController,
+} from "./user.controller";
 import { validate } from "../../../../common/validate.data.dto";
 import { UpdateUserSchema } from "./dto/update.data.dto";
 
@@ -13,5 +17,6 @@ router.patch(
     validate(UpdateUserSchema),
     updateUserController
 );
+router.get("/search", protectRoutes, searchUsersController);
 
 export default router;

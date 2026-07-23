@@ -59,3 +59,18 @@ export const updateUserService = async ({
         username: user.username,
     };
 };
+
+export const searchUsersService = async ({
+    query,
+    excludeId,
+}: {
+    query: string;
+    excludeId: string;
+}) => {
+    return UserModel.find({
+        _id: { $ne: excludeId },
+        username: { $regex: query, $options: "i" },
+    })
+        .select("_id username")
+        .limit(10);
+};
