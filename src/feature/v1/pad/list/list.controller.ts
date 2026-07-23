@@ -198,3 +198,19 @@ export const deleteListController = async (
         });
     }
 };
+
+export const getSharedListsController = async (req: Request, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({
+            message: "Unauthorized",
+        });
+    }
+
+    const lists = await listService.getSharedListsService(
+        req.user._id.toString()
+    );
+
+    res.json({
+        data: lists,
+    });
+};

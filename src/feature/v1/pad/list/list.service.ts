@@ -97,7 +97,10 @@ export const getListByIdService = async ({ userId, listId }: ListData) => {
         throw new Error("User not found");
     }
 
-    const list = await ListModel.findById(listId);
+    const list = await ListModel.findById(listId).populate(
+        "members",
+        "_id username"
+    );
 
     if (!list) {
         throw new Error("List not found");
@@ -243,4 +246,19 @@ export const deleteListService = async ({ userId, listId }: ListData) => {
     await ListModel.deleteOne({ _id: list._id });
 
     return list;
+};
+
+export const getSharedListsService = async (userId: string) => {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    return ListModel.find({
+        members: user._id,
+        userId: { $ne: user._id },
+    })
+        .populate("userId", "username")
+        .sort({ createdAt: -1 });
 };

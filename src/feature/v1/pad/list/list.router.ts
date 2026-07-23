@@ -7,6 +7,7 @@ import {
     deleteListController,
     getListByIdController,
     getListController,
+    getSharedListsController,
     updateListController,
 } from "./list.controller";
 import { UpdateListSchema } from "./dto/update.data.dto";
@@ -28,5 +29,6 @@ router.patch(
     updateListController
 );
 router.delete("/delete/:id", protectRoutes, deleteListController);
+router.get("/shared", protectRoutes, getSharedListsController);
 
 export default router;
